@@ -1,0 +1,28 @@
+<h1>Editing move</h1>
+
+<% form_for(@move) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :x %><br />
+    <%= f.text_field :x %>
+  </p>
+  <p>
+    <%= f.label :y %><br />
+    <%= f.text_field :y %>
+  </p>
+  <p>
+    <%= f.label :by_player %><br />
+    <%= f.check_box :by_player %>
+  </p>
+  <p>
+    <%= f.label :round_id %><br />
+    <%= f.text_field :round_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @move %> |
+<%= link_to 'Back', moves_path %>

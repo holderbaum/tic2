@@ -1,0 +1,59 @@
+body{
+  font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif; 
+  font-size:14px;
+}
+
+div#headimage{
+  text-align: center;
+  margin: 0px auto;
+}
+
+div#headimage img{
+  border: 0px;
+}
+
+div#main {
+  text-align:center;
+  margin: 0px auto;
+}
+
+#main table {
+  margin: auto;
+  text-align: left;
+  margin-bottom: 20px;
+}
+#main table .hscore{
+  padding: 6px
+}
+#main table#field {
+  background-image: url(../images/field.png);
+  width: 400px;
+  height: 400px;
+  border: 0px;
+}
+
+#main table#field td {
+  width: 100px;
+  height: 100px;
+  text-align: center;
+}
+
+div.notice {
+  width: 400px;
+  text-align: center;
+  margin: 0px auto;
+  background-color: #99FF99;
+  border: 1px solid green;
+}
+
+div.error {
+  width: 400px;
+  text-align: center;
+  margin: 0px auto;
+  background-color: #FF9966;
+  border: 1px solid red
+}
+
+.play_again{
+  margin-bottom: 20px;
+}

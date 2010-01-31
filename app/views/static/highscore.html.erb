@@ -1,0 +1,15 @@
+<table>
+  <tr>
+    <th class="hscore">Player</th>
+    <th class="hscore">Moves</th>
+    <th class="hscore">Duration</th>
+  </tr>
+
+  <% @hscore.each do |r| %>
+    <tr>
+    <td class="hscore"><%= r[:player] %></td>
+    <td class="hscore"><%= r[:moves] %></td>
+    <td class="hscore"><%= p r[:duration].to_s+'s' %> </td>
+    </tr>
+<% end %>
+</table>

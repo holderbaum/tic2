@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title></title>
+    <%= stylesheet_link_tag 'style' %>
+    <%= stylesheet_link_tag 'buttons' %>
+    <%= javascript_include_tag 'jquery.js' %>
+    <%= javascript_include_tag 'jquery.form.js'%>
+    <%= javascript_include_tag 'application.js' %>
+
+  </head>
+  <body>
+
+    <div id="headimage">
+      <%= image_tag "title.png", :alt => 'Tic Tac Toe' %>
+    </div>
+
+    <div id="navigation">
+      <ul>
+        <% if request.request_uri == '/highscore' %>
+          <li> <%= link_to '<span class="start">Game</span>', root_path, :class => 'button' %> </li>
+        <% else %>
+          <li> <%= link_to '<span class="hscore">Highscore</span>', highscore_path, :class => 'button' %> </li>
+        <% end %>
+        <div class="clear"></div>
+      </ul>
+    </div>
+    <!-- TODO: this should not be visible to the user, will be removed later
+    <% if flash[:notice] %>
+      <div class="notice"><%= flash[:notice] %></div>
+    <% end %>
+
+    <% if flash[:error] %>
+      <div class="error"><%= flash[:error] %></div>
+    <% end %>
+    -->
+    <div id="main">
+      <%= yield %>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+/*
+ * Found on:
+ *      
+ *  http://woork.blogspot.com/2008/06/beautiful-css-buttons-with-icon-set.html
+ *
+ */
+
+
+div#navigation {
+  display: table;
+  margin: 0px auto;
+}
+
+#navigation ul{
+  width: 100%;
+  text-align: center;
+  margin: 0px;
+  padding: 0px;
+}
+#navigation li{
+  margin: 5px;
+  display: inline;
+  float: left;
+}
+
+#navigation div.clear{
+  clear: left;
+}
+
+#navigation a.button{
+  background:url(../images/button.gif);
+  display:block;
+  color:#555555;
+  font-weight:bold;
+  height:30px;
+  line-height:29px;
+  margin-bottom:14px;
+  text-decoration:none;
+  width:191px;
+}
+#navigation a:hover.button {
+  color:#0066CC;
+}
+
+/* -------------------- */
+/* CLASSES              */
+/* -------------------- */
+#navigation span.start{
+  background:url(../images/icons/star.png) no-repeat 10px 8px;
+  text-indent:30px;
+  display:block;
+}
+#navigation span.hscore{
+  background:url(../images/icons/table_lightning.png) no-repeat 10px 8px;
+  text-indent:30px;
+  display:block;
+}

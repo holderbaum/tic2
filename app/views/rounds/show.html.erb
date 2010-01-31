@@ -1,0 +1,47 @@
+<% unless @round.state == Round::RUNNING %>
+  <div id="gamestate">
+    <%= image_tag 'win.png' if @round.state == Round::WON %>
+    <%= image_tag 'lose.png' if @round.state == Round::LOST %>
+    <%= image_tag 'draw.png' if @round.state == Round::DRAWN %>
+  </div>
+<% end %>
+
+<table id="field">
+  <% field = @round.field %>
+  <% field.each_index do |y| %>
+    <tr>
+      <% field[y].each_index do |x| %>
+        <td>
+          <!-- <%= render :text => "(#{x},#{y}) - #{field[y][x]}"%> -->
+          <% if field[y][x] == 0 and @round.state == Round::RUNNING %>
+            <% form_for(@move,:html => {:class=>'move_form'}) do |f| %>
+              <%= f.hidden_field :x, :value => "#{x}" %>
+              <%= f.hidden_field :y, :value => "#{y}" %>
+              <%= f.hidden_field :by_player, :value => '1' %>
+              <%= f.submit '~',:class=>'move_submit' %>
+            <% end %>
+          <% elsif field[y][x] == 1%>
+            <%= image_tag 'x.png', :size => '100x100' %>
+          <% elsif field[y][x] == 2%>
+            <%= image_tag 'o.png', :size => '100x100' %>
+          <% end %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+
+<% unless @round.state == Round::RUNNING %>
+  <% round = Round.new %>
+  <% form_for round do |f| %>
+    <%= f.hidden_field :player, :value => @round.player %>
+    <%= f.submit 'New Round',:class=>'play_again' %>
+  <% end %>
+
+<% end %>
+
+
+<% form_for @round, :html => {:method => :delete} do |f| %>
+  <%= f.submit 'exit round',:class=>'exit_round' %>
+<% end %>
