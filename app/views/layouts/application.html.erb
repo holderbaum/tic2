@@ -26,15 +26,18 @@
         <div class="clear"></div>
       </ul>
     </div>
-    <!-- TODO: this should not be visible to the user, will be removed later
-    <% if flash[:notice] %>
-      <div class="notice"><%= flash[:notice] %></div>
+
+    <% if false %>
+      <%# special way of commenting out, the could below could be useful for debugging purposes %>
+      <% if flash[:notice] %>
+        <div class="notice"><%= flash[:notice] %></div>
+      <% end %>
+
+      <% if flash[:error] %>
+        <div class="error"><%= flash[:error] %></div>
+      <% end %>
     <% end %>
 
-    <% if flash[:error] %>
-      <div class="error"><%= flash[:error] %></div>
-    <% end %>
-    -->
     <div id="main">
       <%= yield %>
     </div>

@@ -1,15 +1,24 @@
 <table>
   <tr>
+    <th></th>
+    <th></th>
     <th class="hscore">Player</th>
     <th class="hscore">Moves</th>
     <th class="hscore">Duration</th>
   </tr>
 
+  <% x = 0 %>
   <% @hscore.each do |r| %>
     <tr>
-    <td class="hscore"><%= r[:player] %></td>
-    <td class="hscore"><%= r[:moves] %></td>
-    <td class="hscore"><%= p r[:duration].to_s+'s' %> </td>
+      <td><%= x=x+1 %></td>
+      <td>
+        <%= image_tag 'icons/medal_1st.png' if x==1 %>
+        <%= image_tag 'icons/medal_2st.png' if x==2 %>
+        <%= image_tag 'icons/medal_3st.png' if x==3 %>
+      </td>
+      <td class="hscore"><%= r[:player] %></td>
+      <td class="hscore"><%= r[:moves] %></td
+      <td class="hscore"><%= p r[:duration].to_s+'s' %> </td>
     </tr>
-<% end %>
+  <% end %>
 </table>

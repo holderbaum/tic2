@@ -13,12 +13,6 @@ class StaticController < ApplicationController
   # the first n rounds are listed, ordered by the duration and the amount of
   # moves per round
   def highscore
-#    @rounds = Round.find(:all, :limit=>10, :conditions=>{:state => Round::WON}, :order => [":updated_at - :created_at"])
-#    @rounds = Round.find_by_sql(
-#      "SELECT player,updated_at AS duration
-#       FROM rounds
-#       ORDER BY duration
-#       LIMIT 10")
     @rounds = Round.find(:all,:conditions=>{:state => Round::WON})
 
     @hscore = []
@@ -29,7 +23,8 @@ class StaticController < ApplicationController
       var[:moves] = Move.find(:all,:conditions=>{:round_id=> x.id}).count
       @hscore << var
     end
-    @hscore = @hscore.sort_by {|x| [x[:moves],x[:duration]]}
+    @hscore = (@hscore.sort_by {|x| [x[:moves],x[:duration]]})[0,10]
+    
 
   end
 

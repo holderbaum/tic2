@@ -10,12 +10,13 @@ class Round < ActiveRecord::Base
   DRAWN   = 3
 
 
-  # obsolete
-  def field_full
-    self.moves.find(:all).count == 9
-  end
-
-  def status
+  # status represents the state of the actual round in a way, thats simpler to
+  # handle than all those biiiig SQL-Statements.
+  # It returns :player_win, :ki_win, :field_full or :running
+  #
+  # (TODO: This method comes whith a great redundanca, which should be reduced by a
+  # helper-method)
+  def status # {{{
    
     # return :player_win if there are 3 moves with same x/y value
     3.times { |x| 
@@ -75,11 +76,12 @@ class Round < ActiveRecord::Base
     return :field_full if self.moves.find(:all).count == 3*3
 
     :running
-  end
+  end # }}}
 
 
   # creates an array which represents the actual gaming-field
-  def field
+  # this is used by the view to build a nice html-table
+  def field # {{{
     iy = 0
     field = Array.new(3) { |y|
       ix=0
@@ -99,7 +101,7 @@ class Round < ActiveRecord::Base
       iy+=1
       y
     }
-  end
+  end # }}}
 
 
 end

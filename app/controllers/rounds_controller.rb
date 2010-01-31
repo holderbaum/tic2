@@ -55,17 +55,6 @@ class RoundsController < ApplicationController
   # GET /rounds/new.xml
   def new # {{{
     @round = Round.new
-
-  end # }}}
-
-  # TODO: Obsolete. A round shouldnt be changed directly by the user after creation in any way. In a more
-  # stable state of this application, this will be removed.
-  # The only changes on a current round will be the state. but this should NOT
-  # be accessible by the user.
-  #
-  # GET /rounds/1/edit
-  def edit # {{{
-    @round = Round.find(params[:id])
   end # }}}
 
   # POST /rounds
@@ -81,25 +70,6 @@ class RoundsController < ApplicationController
     redirect_to game_path
   end # }}}
 
-  # TODO: Obsolete: mentioned above! ^^
-  #
-  # PUT /rounds/1
-  # PUT /rounds/1.xml
-  def update # {{{
-    @round = Round.find(params[:id])
-
-    respond_to do |format|
-      if @round.update_attributes(params[:round])
-        flash[:notice] = 'Round was successfully updated.'
-        format.html { redirect_to(@round) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @round.errors, :status => :unprocessable_entity }
-      end
-    end
-  end # }}}
-
   # This will be called by the exit button beneath the gaming field.
   # Just the destruction of the current round - no highscore, no glory!!
   #
@@ -107,8 +77,9 @@ class RoundsController < ApplicationController
   # DELETE /rounds/1.xml
   def destroy # {{{
     @round = Round.find(params[:id])
+    
     # the round needs only to be deleted, when its still running. An ended game
-    # shall resist for the usage in the highscores.
+    # shall resist so it'll be viewable in the highscore-list
     @round.destroy if @round.state == Round::RUNNING
 
     session[:round_id] = nil

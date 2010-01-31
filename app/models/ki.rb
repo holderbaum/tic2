@@ -1,22 +1,27 @@
 class KI
 
-  def initialize round_id
+  def initialize round_id # {{{
     @round = Round.find(round_id)
     # let's chache the moves, this will save many DBIO so far
     @ki_moves = @round.moves.find(:all,:conditions=>{:by_player=>false})
     @player_moves = @round.moves.find(:all,:conditions=>{:by_player=>true}) 
-  end
+  end # }}}
 
-  def set x,y
+  # this modualarises the code for setting a field, since this is an often
+  # needed function
+  def set x,y # {{{
     move = Move.new
     move.x = x
     move.y = y
     move.by_player = false
     move.round_id = @round.id
     move.save
-  end
+  end # }}}
 
-  def move
+  # this method will fulfill the move with all the needed logic behind.
+  # for now, it calls self.random and returns back
+  # (A KI will be implemented soon)
+  def move # {{{
     self.random -1,-1
     return
     # first check, if I did not make any move
@@ -38,13 +43,16 @@ class KI
 
     end
     
-  end
+  end # }}}
 
-  def random setx,sety
+  # random makes a random move. but it has a little speciallity. It only
+  # randomize those coords, which are set to -1. others remain by their given
+  # values
+  def random setx,sety # {{{
     field = @round.field
     x = setx unless setx == -1
     y = sety unless sety == -1
-    unless @round.field_full
+    unless @round.status == :field_full
       begin    
         x = rand(3) if setx == -1
         y = rand(3) if sety == -1
@@ -52,6 +60,6 @@ class KI
     end
 
     self.set x,y
-  end
+  end # }}}
 
 end
