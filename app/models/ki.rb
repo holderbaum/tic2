@@ -22,8 +22,8 @@ class KI
   # for now, it calls self.random and returns back
   # (A KI will be implemented soon)
   def move # {{{
-    self.get_next_moves nil
-    self.random -1,-1
+    m = self.get_next_move @round.get_moves_as_hash(false), @round.get_moves_as_hash(true)
+    set m[:x],m[:y]
     return
     # first check, if I did not make any move
     if @ki_moves.count == 0
@@ -66,21 +66,48 @@ class KI
   # the ki should compute the next moves.
   # this method can help
   #
-  # moves is an array of all taken moves since now
-  def get_next_moves moves
-
-    
+  # the moves are arrays of all taken moves as hashes since now
+  def get_next_move ki_moves,player_moves
 
     logger = ActiveRecord::Base.logger
     logger.debug '##################'
     logger.debug '## Entering get_next_moves'
-    3.times do |x|
-      3.times do |y|
-        logger.debug '   x: '+x.to_s+' | y: '+y.to_s
 
-      end
+    # first, let's create an array which holds all possible next moves
+    ki_moves_options = self.get_all_move_options ki_moves+player_moves
+
+    # now select all those moves, that would lead to a direct victory
+    ki_moves_winning_options = ki_moves_options.select {|m| @round.has_winning_combination ki_moves+[m]}
+    return ki_moves_winning_options[0] if ki_moves_winning_options.count > 0
+
+    # it seems, there wheren't any direct victories.
+    # so, let's check, if the player would win with one of those moves above
+    ki_moves_options.each do |m|
+      return m if @round.has_winning_combination player_moves+[m]
     end
+
+    # the next move brings nothing, move random
+    return ki_moves_options[0]
 
     logger.debug '##################'
   end
+
+  # returns an array of hashes, containing all possible next moves
+  def get_all_move_options moves
+    logger = ActiveRecord::Base.logger
+
+    move_options = []
+    3.times do |x|
+      3.times do |y|
+        if moves.select{|m| m[:x]==x and m[:y]==y}.count ==1
+          logger.debug '   x: '+x.to_s+' | y: '+y.to_s+' -> exist'
+        else
+          logger.debug '   x: '+x.to_s+' | y: '+y.to_s+' -> possible'
+          move_options.push Hash[:x=>x,:y=>y]
+        end
+      end
+    end
+    move_options
+  end
+
 end

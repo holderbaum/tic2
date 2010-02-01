@@ -16,8 +16,7 @@ class Round < ActiveRecord::Base
     self.compute_state_2
   end
 
-  # status represents the state of the actual round in a way, thats simpler to
-  # handle than all those biiiig SQL-Statements.
+  # compute_state computes the state of the actual round in a
   # It returns WON, LOST, DRAWN or RUNNING
   #
   # (TODO: This method comes whith a great redundanca, which should be reduced by a
