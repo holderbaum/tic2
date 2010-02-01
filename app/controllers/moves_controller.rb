@@ -17,7 +17,7 @@ class MovesController < ApplicationController
   # POST /moves.xml
   def create # {{{
     round = Round.find(@round_id)
-    if (status = round.status) == :running
+    if (status = round.compute_state) == Round::RUNNING
 
       @move = Move.new(params[:move])
 
@@ -26,7 +26,7 @@ class MovesController < ApplicationController
       if @move.save
         flash[:notice] = 'Move was successfully created.'
 
-        if (status = round.status) == :running
+        if (status = round.compute_state) == Round::RUNNING
           ki = KI.new @round_id
           ki.move
         end
@@ -38,20 +38,21 @@ class MovesController < ApplicationController
     # the flash notices are only for debugging purposes.
     # primary is this construct for setting the right round.state, depending
     # on the current status
-    unless (status = round.status) == :running
-      if status == :player_win
-        flash[:notice] = 'You win!'
-        round.state = Round::WON
-      elsif status == :ki_win
-        flash[:notice] = 'You lose'
-        round.state = Round::LOST
-      elsif status == :field_full
-        flash[:notice] = 'Draw!'
-        round.state = Round::DRAWN
-      end
+    round.state = round.compute_state
+#    unless (status = round.compute_state) == Round::RUNNING
+#      round.state 
+#      if status == Round::WON
+#        flash[:notice] = 'You win!'
+#        round.state = Round::WON
+#      elsif status == Round::LOST
+#        flash[:notice] = 'You lose'
+#        round.state = Round::LOST
+#      elsif status == Round::DRAWN
+#        flash[:notice] = 'Draw!'
+#        round.state = Round::DRAWN
+#      end
 
       round.save
-    end
 
     redirect_to round_url @round_id
   end # }}}

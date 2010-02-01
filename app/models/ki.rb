@@ -22,6 +22,7 @@ class KI
   # for now, it calls self.random and returns back
   # (A KI will be implemented soon)
   def move # {{{
+    self.get_next_moves nil
     self.random -1,-1
     return
     # first check, if I did not make any move
@@ -52,7 +53,7 @@ class KI
     field = @round.field
     x = setx unless setx == -1
     y = sety unless sety == -1
-    unless @round.status == :field_full
+    unless @round.compute_state == Round::DRAWN
       begin    
         x = rand(3) if setx == -1
         y = rand(3) if sety == -1
@@ -62,4 +63,24 @@ class KI
     self.set x,y
   end # }}}
 
+  # the ki should compute the next moves.
+  # this method can help
+  #
+  # moves is an array of all taken moves since now
+  def get_next_moves moves
+
+    
+
+    logger = ActiveRecord::Base.logger
+    logger.debug '##################'
+    logger.debug '## Entering get_next_moves'
+    3.times do |x|
+      3.times do |y|
+        logger.debug '   x: '+x.to_s+' | y: '+y.to_s
+
+      end
+    end
+
+    logger.debug '##################'
+  end
 end

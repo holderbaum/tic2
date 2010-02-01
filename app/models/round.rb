@@ -10,19 +10,24 @@ class Round < ActiveRecord::Base
   DRAWN   = 3
 
 
+  # just a wrapper, will be replaced later, when 2nd version  of compute_state
+  # works
+  def compute_state
+    self.compute_state_2
+  end
+
   # status represents the state of the actual round in a way, thats simpler to
   # handle than all those biiiig SQL-Statements.
-  # It returns :player_win, :ki_win, :field_full or :running
+  # It returns WON, LOST, DRAWN or RUNNING
   #
   # (TODO: This method comes whith a great redundanca, which should be reduced by a
   # helper-method)
-  def status # {{{
-   
+  def compute_state_1 # {{{
     # return :player_win if there are 3 moves with same x/y value
     3.times { |x| 
       if  self.moves.find(:all,:conditions => {:x => x,:by_player => true}).count == 3 or
           self.moves.find(:all,:conditions => {:y => x,:by_player => true}).count == 3
-          return :player_win
+          return WON
       end
     }
 
@@ -32,14 +37,14 @@ class Round < ActiveRecord::Base
       if self.moves.find(:first,:conditions => {:x => 0,:y => 0, :by_player => true})
         # the player has a cross in the bott. left corner
         
-        return :player_win if self.moves.find(:first,:conditions => {:x => 2,:y => 2, :by_player => true})
+        return WON if self.moves.find(:first,:conditions => {:x => 2,:y => 2, :by_player => true})
         # the player makes a line ;)
 
 
       elsif self.moves.find(:first,:conditions => {:x => 2,:y => 0, :by_player => true})
         # the player has a cross in the bott. right corner 
 
-        return :player_win if self.moves.find(:first,:conditions => {:x => 0,:y => 2, :by_player => true})
+        return WON if self.moves.find(:first,:conditions => {:x => 0,:y => 2, :by_player => true})
         # the player makes a line ;)
 
       end
@@ -49,7 +54,7 @@ class Round < ActiveRecord::Base
     3.times { |x| 
       if  self.moves.find(:all,:conditions => {:x => x,:by_player => false}).count == 3 or
           self.moves.find(:all,:conditions => {:y => x,:by_player => false}).count == 3
-          return :ki_win
+          return LOST
       end
     }
 
@@ -59,23 +64,80 @@ class Round < ActiveRecord::Base
       if self.moves.find(:first,:conditions => {:x => 0,:y => 0, :by_player => false})
         # the ki has a cross in the bott. left corner
         
-        return :ki_win if self.moves.find(:first,:conditions => {:x => 2,:y => 2, :by_player => false})
+        return LOST if self.moves.find(:first,:conditions => {:x => 2,:y => 2, :by_player => false})
         # the ki makes a line ;)
 
 
       elsif self.moves.find(:first,:conditions => {:x => 2,:y => 0, :by_player => false})
         # the ki has a cross in the bott. right corner 
 
-        return :ki_win if self.moves.find(:first,:conditions => {:x => 0,:y => 2, :by_player => false})
+        return LOST if self.moves.find(:first,:conditions => {:x => 0,:y => 2, :by_player => false})
         # the ki makes a line ;)
 
       end
     end
 
     # return a :field_full if there are 9 moves
-    return :field_full if self.moves.find(:all).count == 3*3
+    return DRAWN if self.moves.find(:all).count == 3*3
 
-    :running
+    RUNNING
+  end # }}}
+
+
+  # moves is an array of hashes, representating the ccordinates of moves:
+  #  example: [ [:x,:y],.. ]
+  def has_winning_combination moves
+
+    # return true if there are 3 moves with same x/y value
+    3.times do |x|
+      if moves.select{|m| m[:x] == x}.count == 3 or moves.select{|m| m[:y] == x}.count == 3
+        return true
+      end
+    end
+
+    #returns :player_win if a diagonal line is found:
+    if moves.select{|m| m[:x]== 1 and m[:y]==1}.count==1
+      # the player has a cross in the middle of the field
+      if moves.select{|m| m[:x]== 0 and m[:y]==0}.count==1
+        # the player has a cross in the bott. left corner
+       
+        return true if moves.select{|m| m[:x]==2 and m[:y]==2}.count==1
+        # the player makes a line ;)
+
+      elsif moves.select{|m| m[:x]==2 and m[:y]==0}.count==1
+        # the player has a cross in the bott. right corner 
+
+        return true if moves.select{|m| m[:x]==0 and m[:y]==2}.count==1
+        # the player makes a line ;)
+      end
+    end
+    
+    return false
+  end
+
+  def get_moves_as_hash by_player
+    moves = []
+    self.moves.find(:all,:conditions=>{:by_player=>by_player}).each do |m|
+      moves.push Hash[:x=>m.x,:y=>m.y]
+    end
+    moves
+  end
+
+  # compute_state v2
+  def compute_state_2 # {{{
+    
+    player_moves = []
+    ki_moves = []
+
+    player_moves = self.get_moves_as_hash true
+    ki_moves = self.get_moves_as_hash false
+    
+    return WON if  has_winning_combination player_moves
+    return LOST if has_winning_combination ki_moves
+    
+    return DRAWN if player_moves.count + ki_moves.count == 3*3
+
+    RUNNING
   end # }}}
 
 
@@ -103,5 +165,6 @@ class Round < ActiveRecord::Base
     }
   end # }}}
 
+  
 
 end
