@@ -46,8 +46,3 @@ function manipulateDOM() {
 
 $(document).ready(manipulateDOM);
 
-function updateField(responseText){
-  alert('LOLZ, I\'m AJAX!')
-}
-
-
