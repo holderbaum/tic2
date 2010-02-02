@@ -2,13 +2,13 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <title></title>
+    <title>:: Tic Tac Toe ::</title>
+
     <%= stylesheet_link_tag 'style' %>
     <%= stylesheet_link_tag 'buttons' %>
     <%= javascript_include_tag 'jquery.js' %>
     <%= javascript_include_tag 'jquery.form.js'%>
     <%= javascript_include_tag 'application.js' %>
-
   </head>
   <body>
 
@@ -26,17 +26,6 @@
         <div class="clear"></div>
       </ul>
     </div>
-
-    <% if false %>
-      <%# special way of commenting out, the could below could be useful for debugging purposes %>
-      <% if flash[:notice] %>
-        <div class="notice"><%= flash[:notice] %></div>
-      <% end %>
-
-      <% if flash[:error] %>
-        <div class="error"><%= flash[:error] %></div>
-      <% end %>
-    <% end %>
 
     <div id="main">
       <%= yield %>

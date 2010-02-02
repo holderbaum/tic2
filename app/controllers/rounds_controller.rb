@@ -1,7 +1,5 @@
 class RoundsController < ApplicationController
   
-  #before_filter :user_session
-
   # the index itself acts like a "proxy". When the client has
   # no round_id in its session, he will be redirected to the landing page.
   # Is round_id already set, the user'll be redirected to the correspondating url
@@ -38,17 +36,20 @@ class RoundsController < ApplicationController
     @move = Move.new
     @move.round_id = @round.id
 
+    # since we want to use unobtrusive ajax requests, we must distinguish
+    # between normal request to an html-page and requests to an .js file
+    #
+    # (The main-div is loaded with the js-extendion)
     respond_to do |format|
       format.js do
+        # just render the view, no application-layout around
         render :action => 'show', :layout => false
       end
       format.html do
         render :action => 'show'
       end
     end
-    @round = Round.find(params[:id])
-    @move = Move.new
-    @move.round_id = @round.id
+
   end # }}}
 
   # GET /rounds/new
@@ -62,11 +63,12 @@ class RoundsController < ApplicationController
   def create # {{{
     @round = Round.new(params[:round])
 
+    # the round must begin in a running-state! :)
+    # Otherwise, it would never start
     @round.state = Round::RUNNING
 
-    if @round.save
-      session[:round_id] = @round.id
-    end
+    session[:round_id] = @round.id if @round.save
+    
     redirect_to game_path
   end # }}}
 

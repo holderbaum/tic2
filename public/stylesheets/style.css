@@ -57,3 +57,7 @@ div.error {
 .play_again{
   margin-bottom: 20px;
 }
+
+div #gamestate_placeholder{
+  margin-bottom: 100px;
+}

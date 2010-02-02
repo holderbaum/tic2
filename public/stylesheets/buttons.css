@@ -2,6 +2,8 @@
  * Found on:
  *      
  *  http://woork.blogspot.com/2008/06/beautiful-css-buttons-with-icon-set.html
+ *  
+ * and slightly modified
  *
  */
 
@@ -39,7 +41,7 @@ div#navigation {
   width:191px;
 }
 #navigation a:hover.button {
-  color:#0066CC;
+  color:#3FA9F4;
 }
 
 /* -------------------- */

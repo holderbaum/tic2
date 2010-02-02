@@ -4,15 +4,17 @@
     <%= image_tag 'lose.png' if @round.state == Round::LOST %>
     <%= image_tag 'draw.png' if @round.state == Round::DRAWN %>
   </div>
+<% else %>
+  <div id="gamestate_placeholder"></div>
 <% end %>
 
 <table id="field">
+  <% # Round::field uses a lot of loops, so its better to cache the result %>
   <% field = @round.field %>
   <% field.each_index do |y| %>
     <tr>
       <% field[y].each_index do |x| %>
         <td>
-          <!-- <%= render :text => "(#{x},#{y}) - #{field[y][x]}"%> -->
           <% if field[y][x] == 0 and @round.state == Round::RUNNING %>
             <% form_for(@move,:html => {:class=>'move_form'}) do |f| %>
               <%= f.hidden_field :x, :value => "#{x}" %>
@@ -36,12 +38,10 @@
   <% round = Round.new %>
   <% form_for round do |f| %>
     <%= f.hidden_field :player, :value => @round.player %>
-    <%= f.submit 'New Round',:class=>'play_again' %>
+    <%= f.submit 'Play Again?',:class=>'play_again' %>
   <% end %>
-
 <% end %>
 
-
 <% form_for @round, :html => {:method => :delete} do |f| %>
-  <%= f.submit 'exit round',:class=>'exit_round' %>
+  <%= f.submit 'Exit Round',:class=>'exit_round' %>
 <% end %>
